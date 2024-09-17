@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<PageTitle>Home</PageTitle>
+
+<h1>QR Code</h1>
+
+<input type="text" @bind-value="Text" />
+<br />
+<br />
+@if (!string.IsNullOrEmpty(_base64QrCode))
+{
+    <img src="data:image/png;base64, @_base64QrCode" />
+}
+
+@code {
+    private string _text;
+    private string Text
+    {
+        get => _text;
+        set
+        {
+            _text = value;
+            if (!string.IsNullOrEmpty(value))
+            {
+                var code = QrCode.EncodeText(value, QrCode.Ecc.Low);
+                _base64QrCode = Convert.ToBase64String(code.ToPng(5, 5));
+            }
+        }
+    }
+
+    private string? _base64QrCode;
+}
